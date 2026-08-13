@@ -1,0 +1,29 @@
+<%
+  walltime = (bc_num_hours.to_i * 60)
+%>
+---
+header: |
+  #!/bin/bash
+  . ~/.bashrc
+batch_connect:
+  template: basic
+  conn_params:
+    - working_directory
+    - copilot_binary
+
+script:
+  native:
+    - "--partition"
+    - "<%= slurm_partition %>"
+    - "--account"
+    - "<%= slurm_account %>"
+    - "--time"
+    - "<%= walltime %>"
+    - "--nodes"
+    - "1"
+    - "--ntasks-per-node"
+    - "<%= bc_num_slots %>"
+    - "--mem-per-cpu"
+    - "<%= bc_num_memory %>G"
+    - "--job-name"
+    - "<%= job_name %>"

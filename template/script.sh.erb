@@ -1,0 +1,41 @@
+<% require "shellwords" %>
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+WORKING_DIRECTORY=<%= Shellwords.escape(context.working_directory.to_s) %>
+COPILOT_BINARY=<%= Shellwords.escape(context.copilot_binary.to_s) %>
+TTYD_BINARY="/software/2025/github_copilot_gui/bin/ttyd"
+
+if [[ ! -d "${WORKING_DIRECTORY}" ]]; then
+  echo "Configured working directory does not exist: ${WORKING_DIRECTORY}" >&2
+  exit 1
+fi
+
+if ! command -v "${COPILOT_BINARY}" >/dev/null 2>&1; then
+  echo "Copilot CLI was not found: ${COPILOT_BINARY}" >&2
+  echo "Provide the absolute path to the executable in the form." >&2
+  exit 1
+fi
+
+if [[ ! -x "${TTYD_BINARY}" ]]; then
+  echo "ttyd was not found at ${TTYD_BINARY}." >&2
+  exit 1
+fi
+
+cd "${WORKING_DIRECTORY}"
+
+MCP_CONFIG="/software/2025/github_copilot_gui/mcp/cluster-context.json"
+
+if [[ -f "${MCP_CONFIG}" ]]; then
+  MCP_ARGS="--additional-mcp-config @${MCP_CONFIG}"
+else
+  echo "WARNING: MCP config not found at ${MCP_CONFIG}, launching without MCP." >&2
+  MCP_ARGS=""
+fi
+
+exec "${TTYD_BINARY}" \
+  --writable \
+  --port "${port}" \
+  --base-path "/node/${host}/${port}" \
+  "${COPILOT_BINARY}" ${MCP_ARGS} -C "${WORKING_DIRECTORY}"

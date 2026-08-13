@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+[[ $(type -t module) == "function" ]] && export -f module
+
+# Ensure script.sh is executable (OOD does not set the execute bit)
+chmod +x "${PWD}/script.sh"
+
+port=$(find_port localhost 7000 11000)
+export port

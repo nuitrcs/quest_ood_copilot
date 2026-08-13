@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "quest-cluster-context": {
+      "command": "/software/2025/github_copilot_gui/mcp/env/bin/python3",
+      "args": ["/software/2025/github_copilot_gui/mcp/quest_context_server.py"]
+    }
+  }
+}

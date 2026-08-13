@@ -1,0 +1,75 @@
+---
+cluster: "quests"
+
+form:
+  - slurm_partition
+  - slurm_account
+  - bc_num_hours
+  - bc_num_slots
+  - bc_num_memory
+  - working_directory
+  - copilot_binary
+  - job_name
+  - raw_data
+  - raw_group_data
+
+attributes:
+  slurm_partition:
+    label: "SLURM Partition"
+    help: |
+      Select the SLURM partition to submit this job to. Your choice determines which
+      accounts and wall-time limits are available.
+    widget: select
+
+  slurm_account:
+    label: "SLURM Account"
+    help: |
+      The allocation/account to charge this job to. If an expected allocation is missing
+      it may be expired or incompatible with the selected partition.
+    widget: select
+
+  bc_num_hours:
+    label: "Wall time (hours)"
+    value: 2
+    min: 1
+    max: 24
+    step: 1
+
+  bc_num_slots:
+    label: "CPU cores"
+    value: 1
+    min: 1
+    max: 128
+    step: 1
+
+  bc_num_memory:
+    label: "Memory per CPU (GB)"
+    value: 4
+    min: 1
+    max: 32
+    step: 1
+
+  working_directory:
+    label: "Working directory"
+    value: "<%= ENV.fetch('HOME') %>"
+    help: "Absolute path to the project directory Copilot should open."
+
+  copilot_binary:
+    widget: hidden_field
+    value: "/software/2025/github_copilot_gui/bin/copilot"
+
+  job_name:
+    label: "Job name"
+    value: "GitHub Copilot"
+
+  raw_data:
+    label: "Account associations for use by JavaScript"
+    widget: hidden_field
+    value: "<%= RawSlurmData.read_sinfo_from_file %>"
+    cacheable: false
+
+  raw_group_data:
+    label: "Linux groups for use by JavaScript"
+    widget: hidden_field
+    value: "<%= RawSlurmData.rawgroupdata %>"
+    cacheable: false

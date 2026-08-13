@@ -1,0 +1,8 @@
+---
+name: GitHub Copilot
+icon: fa://terminal
+category: Interactive Apps
+subcategory: Development
+role: batch_connect
+description: |
+  Launch GitHub Copilot CLI in a browser-based terminal on a compute node.
